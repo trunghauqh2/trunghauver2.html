@@ -2,135 +2,773 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản Lý Tài Liệu Chuyên Ngành</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạp Hóa Sinh Viên | Chợ sinh viên Sư phạm Huế</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 850px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: #1e3a8a; margin-bottom: 30px; font-size: 24px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .node { margin: 12px 0; padding: 2px 0; }
-        .btn { background-color: #f3f4f6; color: #1f2937; border: 1px solid #e5e7eb; padding: 14px 20px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; text-align: left; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
-        .btn:hover { background-color: #e5e7eb; }
-        .btn-main { background-color: #1e3a8a; color: white; font-size: 18px; }
-        .btn-main:hover { background-color: #1d4ed8; }
-        .btn::after { content: '▶'; font-size: 12px; transition: transform 0.2s; }
-        .active::after { content: '▼'; }
-        .branch-level-1, .branch-level-2 { display: none; padding-left: 25px; border-left: 2px dashed #1e3a8a; margin-top: 5px; }
-        .branch-level-2 { border-left-color: #10b981; }
-        .file-list { list-style: none; padding: 0; margin: 0; }
-        .file-item { background-color: #f9fafb; border: 1px solid #f3f4f6; margin: 6px 0; border-radius: 6px; font-size: 15px; transition: background 0.2s; }
-        .file-item:hover { background-color: #f0fdf4; border-color: #bbf7d0; }
-        .file-item a { display: block; padding: 12px 15px; color: #2563eb; text-decoration: none; font-weight: 500; }
-        .file-item a:hover { color: #1d4ed8; }
-        .file-item::before { content: '📄 '; padding-left: 15px; position: absolute; margin-top: 12px; pointer-events: none; }
-        .file-item a { padding-left: 40px; }
+        :root { --blue:#1877e8; --blue-dark:#155fc0; --ink:#243047; --muted:#64748b; }
+        html { scroll-behavior:smooth; }
+        body { background:linear-gradient(180deg,#f3f7fd 0%,#f8fafc 100%); color:var(--ink); font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display:none; }
+        .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+        .campus-shell { width:100%; max-width:1440px; margin:0 auto; }
+        .card { background:#fff; border:1px solid #e9eef6; border-radius:18px; box-shadow:0 2px 12px rgba(24,119,232,.05); }
+        .campus-product-card { border:1px solid #e9eef6; border-radius:12px; background:#fff; transition:transform .18s ease,box-shadow .18s ease; }
+        .campus-product-card:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(24,119,232,.12); }
+        .cat-tile .cat-icon { transition:all .15s ease; }
+        .cat-tile:hover .cat-icon { transform:translateY(-2px); }
+        .cat-tile.is-active .cat-icon { background:#1877e8 !important; color:#fff !important; }
+        .cat-tile.is-active .cat-label { color:#1877e8; font-weight:700; }
+        .nav-btn.is-on { color:#1877e8; border-bottom:2px solid #1877e8; }
+        .fav-on i { font-weight:900; color:#ef4444; }
+        button,input,select,textarea { transition:border-color .15s ease,box-shadow .15s ease,background-color .15s ease; }
+        input:focus,select:focus,textarea:focus { outline:none; border-color:#60a5fa !important; box-shadow:0 0 0 3px rgba(59,130,246,.17); }
+        .campus-bottom-nav { left:50%; transform:translateX(-50%); width:min(100%,1440px); }
+        @media (min-width:768px) { body { padding-bottom:0; } }
+        @media (max-width:767px) { body { padding-bottom:84px; } }
     </style>
 </head>
-<body>
-<div class="container">
-    <h1>HỆ THỐNG CÂY THƯ MỤC TÀI LIỆU CHUYÊN NGÀNH</h1>
-    
-    <div class="node">
-        <button class="btn btn-main" onclick="toggleBranch('hk2-branch', this)">1. Danh mục môn chuyên ngành học kì 2</button>
-        
-        <div id="hk2-branch" class="branch-level-1">
-            
-            <div class="node">
-                <button class="btn" onclick="toggleBranch('mon1-files', this)">Môn 1: Hệ cơ sở dữ liệu (SQL Server)</button>
-                <div id="mon1-files" class="branch-level-2">
-                    <ul class="file-list">
-                        <li class="file-item"><a href="Chương 0 Mở đầu.pdf" target="_blank">Chương 0 Mở đầu.pdf</a></li>
-                        <li class="file-item"><a href="Chương 1 Hướng dẫn thực hành.pdf" target="_blank">Chương 1 Hướng dẫn thực hành.pdf</a></li>
-                        <li class="file-item"><a href="Chương 1 - HDTH - Phần 2 - v1.0.pdf" target="_blank">Chương 1 - HDTH - Phần 2 - v1.0.pdf</a></li>
-                        <li class="file-item"><a href="Chương 2 - HDTH - v2.0.pdf" target="_blank">Chương 2 - HDTH - v2.0.pdf</a></li>
-                        <li class="file-item"><a href="Chương 3 - HDTH - v1.0.pdf" target="_blank">Chương 3 - HDTH - v1.0.pdf</a></li>
-                        <li class="file-item"><a href="Chương 4 - Bài giảng v2.0.pdf" target="_blank">Chương 4 - Bài giảng v2.0.pdf</a></li>
-                        <li class="file-item"><a href="Chương 4 - Hướng dẫn thực hành v1.0.pdf" target="_blank">Chương 4 - Hướng dẫn thực hành v1.0.pdf</a></li>
-                        <li class="file-item"><a href="Chương 5 - Bài giảng v1.0.pdf" target="_blank">Chương 5 - Bài giảng v1.0.pdf</a></li>
-                    </ul>
-                </div>
-            </div>
+<body class="font-sans text-gray-800 pb-24">
 
-            <div class="node">
-                <button class="btn" onclick="toggleBranch('mon2-files', this)">Môn 2: Cấu trúc dữ liệu và giải thuật</button>
-                <div id="mon2-files" class="branch-level-2">
-                    <ul class="file-list">
-                        <li class="file-item"><a href="Đề cương Phương pháp lập trình (Thi vấn đáp).pdf" target="_blank">Đề cương Phương pháp lập trình (Thi vấn đáp).pdf</a></li>
-                        <li class="file-item"><a href="Cấu trúc dữ liệu và giải thuật - Giáo trình Thầy Lôi ĐHQGHN.pdf" target="_blank">Cấu trúc dữ liệu và giải thuật - Giáo trình Thầy Lôi ĐHQGHN.pdf</a></li>
-                        <li class="file-item"><a href="Sách cấu trúc dữ liệu và giải thuật (Tiếng anh).pdf" target="_blank">Sách cấu trúc dữ liệu và giải thuật (Tiếng anh).pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng chương 1 Mở đầu.pdf" target="_blank">Bài giảng chương 1 Mở đầu.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng Cấu trúc rẽ nhánh.pdf" target="_blank">Bài giảng Cấu trúc rẽ nhánh.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng Cấu trúc lặp.pdf" target="_blank">Bài giảng Cấu trúc lặp.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng Hàm.pdf" target="_blank">Bài giảng Hàm.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng chương 2 Đệ quy.pdf" target="_blank">Bài giảng chương 2 Đệ quy.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng Cấu trúc dữ liệu có sẵn & Cài đặt thủ công.pptx" target="_blank">Bài giảng Cấu trúc dữ liệu có sẵn & Cài đặt thủ công.pptx</a></li>
-                        <li class="file-item"><a href="Bài giảng chương 5 Ngăn xếp.pdf" target="_blank">Bài giảng chương 5 Ngăn xếp.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng chương 4 Hàng đợi.pdf" target="_blank">Bài giảng chương 4 Hàng đợi.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng chương 6 Cây.pdf" target="_blank">Bài giảng chương 6 Cây.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng Cấu trúc dữ liệu Tree.pptx" target="_blank">Bài giảng Cấu trúc dữ liệu Tree.pptx</a></li>
-                    </ul>
-                </div>
+    <header class="bg-white sticky top-0 z-40 border-b border-slate-100">
+        <div class="campus-shell px-4 md:px-8 py-3 flex items-center gap-3 md:gap-6">
+            <div onclick="showPage('home-page')" class="flex items-center gap-3 cursor-pointer shrink-0">
+                <span class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg"><i class="fa-solid fa-bag-shopping"></i></span>
+                <div class="leading-tight hidden sm:block"><h1 class="text-lg md:text-xl font-bold text-blue-700">Tạp Hóa Sinh Viên</h1><p class="hidden md:block text-[11px] text-slate-500">Kết nối sinh viên - Lan tỏa giá trị</p></div>
             </div>
-
-            <div class="node">
-                <button class="btn" onclick="toggleBranch('mon3-files', this)">Môn 3: Trí tuệ nhân tạo (AI)</button>
-                <div id="mon3-files" class="branch-level-2">
-                    <ul class="file-list">
-                        <li class="file-item"><a href="Chương 1 Biểu diễn không gian trạng thái.pdf" target="_blank">Chương 1 Biểu diễn không gian trạng thái.pdf</a></li>
-                        <li class="file-item"><a href="Chương 5 Tri thức & Suy diễn.pdf" target="_blank">Chương 5 Tri thức & Suy diễn.pdf</a></li>
-                    </ul>
-                </div>
+            <div class="relative flex-1 min-w-0 max-w-xl md:mx-auto">
+                <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Tìm kiếm sản phẩm, danh mục..." class="w-full pl-4 pr-11 py-2.5 rounded-full text-sm bg-white border border-slate-200 shadow-sm">
+                <i class="fa-solid fa-magnifying-glass absolute right-4 top-3 text-blue-600"></i>
             </div>
-
-            <div class="node">
-                <button class="btn" onclick="toggleBranch('mon4-files', this)">Môn 4: Công nghệ phần mềm & DevOps</button>
-                <div id="mon4-files" class="branch-level-2">
-                    <ul class="file-list">
-                        <li class="file-item"><a href="Chương 2-Quy trình phát triển phần mềm.pdf" target="_blank">Chương 2-Quy trình phát triển phần mềm.pdf</a></li>
-                        <li class="file-item"><a href="Chương 3 - Quản lý yêu cầu và lập kế hoạch sản phẩm.pdf" target="_blank">Chương 3 - Quản lý yêu cầu và lập kế hoạch sản phẩm.pdf</a></li>
-                        <li class="file-item"><a href="Chương 4_ Phát triển, Tích hợp và Đảm bảo Chất lượng.pdf" target="_blank">Chương 4_ Phát triển, Tích hợp và Đảm bảo Chất lượng.pdf</a></li>
-                        <li class="file-item"><a href="Chương 5_ Triển khai, Bảo trì và DevOps.pdf" target="_blank">Chương 5_ Triển khai, Bảo trì và DevOps.pdf</a></li>
-                        <li class="file-item"><a href="Hướng dẫn thực hành GitHub.pdf" target="_blank">Hướng dẫn thực hành GitHub.pdf</a></li>
-                    </ul>
-                </div>
+            <nav class="hidden md:flex items-center gap-1">
+                <button id="nav-home" onclick="showPage('home-page')" class="nav-btn flex flex-col items-center px-3 py-1 text-slate-600 hover:text-blue-600 text-xs font-medium"><i class="fa-solid fa-house text-xl mb-0.5"></i><span class="hidden lg:block">Trang chủ</span></button>
+                <button  onclick="showPage('chat-page')" class="nav-btn flex flex-col items-center px-3 py-1 text-slate-600 hover:text-blue-600 text-xs font-medium"><i class="fa-regular fa-comment-dots text-xl mb-0.5"></i><span class="hidden lg:block">Tin nhắn</span></button>
+                <button id="nav-fav" onclick="toggleFavFilter()" class="nav-btn flex flex-col items-center px-3 py-1 text-slate-600 hover:text-blue-600 text-xs font-medium"><i class="fa-regular fa-heart text-xl mb-0.5"></i><span class="hidden lg:block">Yêu thích</span></button>
+            </nav>
+            <div class="relative">
+                    <button onclick="toggleMenu()" class="nav-btn flex flex-col items-center px-3 py-1 text-slate-600 hover:text-blue-600 text-xs font-medium"><i class="fa-regular fa-user text-xl mb-0.5"></i><span class="hidden lg:block">Tài khoản</span></button>
+                    <div id="dropdown-menu" class="hidden absolute right-0 top-full mt-2 bg-white text-gray-800 rounded-lg shadow-xl w-60 z-50 border border-gray-200 overflow-hidden text-sm">
+            <div class="p-3 border-b bg-gray-50">
+                <p id="menu-user-name" class="font-bold text-blue-700">Tài khoản sinh viên</p>
+                <p class="text-xs text-green-700"><i class="fa-solid fa-circle-check"></i> Tài khoản đã xác minh</p>
             </div>
-
-            <div class="node">
-                <button class="btn" onclick="toggleBranch('mon5-files', this)">Môn 5: Toán chuyên ngành (Toán rời rạc)</button>
-                <div id="mon5-files" class="branch-level-2">
-                    <ul class="file-list">
-                        <li class="file-item"><a href="Chương 4-Logic-p1.pdf" target="_blank">Chương 4-Logic-p1.pdf</a></li>
-                        <li class="file-item"><a href="Chương 4-Logic-p2.pdf" target="_blank">Chương 4-Logic-p2.pdf</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="node">
-                <button class="btn" onclick="toggleBranch('mon6-files', this)">Môn bổ trợ: Lập trình Python căn bản</button>
-                <div id="mon6-files" class="branch-level-2">
-                    <ul class="file-list">
-                        <li class="file-item"><a href="Bài giảng Python cơ bản.pptx" target="_blank">Bài giảng Python cơ bản.pptx</a></li>
-                        <li class="file-item"><a href="Bài giảng Mảng.pdf" target="_blank">Bài giảng Mảng.pdf</a></li>
-                        <li class="file-item"><a href="Bài giảng OOP.pptx" target="_blank">Bài giảng OOP.pptx</a></li>
-                        <li class="file-item"><a href="Bài giảng Xử lý ngoại lệ.pptx" target="_blank">Bài giảng Xử lý ngoại lệ.pptx</a></li>
-                    </ul>
-                </div>
-            </div>
-
+            <a href="#" onclick="showPage('my-products-page'); toggleMenu();" class="block px-4 py-2.5 hover:bg-blue-50 flex items-center gap-2 font-semibold text-blue-600">
+                <i class="fa-solid fa-boxes-packing text-blue-500"></i> Sản phẩm của tôi
+            </a>
+            <a href="#" onclick="showPage('docs-page'); toggleMenu();" class="block px-4 py-2.5 hover:bg-blue-50 flex items-center gap-2 border-t"><i class="fa-solid fa-database text-blue-500"></i> Tài liệu thiết kế (CSDL)</a>
+            <a href="#" onclick="showPage('profile-page'); toggleMenu();" class="block px-4 py-2.5 hover:bg-blue-50 flex items-center gap-2 border-t">
+                <i class="fa-regular fa-id-card text-gray-500"></i> Thông tin tài khoản
+            </a>
+            <a href="#" onclick="showPage('kyc-page'); toggleMenu();" class="block px-4 py-2.5 hover:bg-blue-50 flex items-center gap-2 border-t">
+                <i class="fa-solid fa-user-shield text-green-600"></i> Xác minh sinh viên
+            </a>
+            <a href="#" onclick="showPage('auth-page'); toggleMenu();" class="block px-4 py-2.5 hover:bg-blue-50 flex items-center gap-2 text-red-600 border-t">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng nhập / Đổi tài khoản
+            </a>
         </div>
-    </div>
-</div>
 
-<script>
-    function toggleBranch(id, btn) {
-        var el = document.getElementById(id);
-        if (el.style.display === "block") {
-            el.style.display = "none";
-            btn.classList.remove("active");
-        } else {
-            el.style.display = "block";
-            btn.classList.add("active");
+                </div>
+            <button onclick="showPage('post-page')" class="shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 md:px-5 py-2.5 rounded-xl flex items-center gap-2 font-semibold shadow-sm"><i class="fa-solid fa-plus"></i> Đăng bán</button>
+        </div>
+    </header>
+
+    <main class="campus-shell min-h-screen relative">
+
+        <section id="home-page" class="page-content px-3 md:px-6 pt-4 md:pt-6 pb-8">
+            <!-- HERO: đặt ảnh trường của bạn cạnh file này với tên hero-dhsp.jpg -->
+            <section class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-100 via-sky-50 to-sky-100 border border-blue-100 mb-5">
+                <img src="hero-dhsp.jpg" alt="" onerror="this.style.display='none'" class="absolute right-0 top-0 h-full w-full md:w-3/5 object-cover opacity-40 md:opacity-100" style="-webkit-mask-image:linear-gradient(to right,transparent,#000 40%);mask-image:linear-gradient(to right,transparent,#000 40%)">
+                <div class="relative z-10 p-6 md:p-9 max-w-2xl">
+                    <p class="flex items-center gap-2 text-blue-700 font-semibold mb-1"><i class="fa-solid fa-graduation-cap text-2xl"></i> Chợ sinh viên</p>
+                    <h2 class="text-2xl md:text-4xl font-extrabold text-blue-900 leading-tight">Trường Đại học Sư phạm Huế</h2>
+                    <p class="text-sm md:text-lg text-slate-700 mt-2">Mua bán - Trao đổi - Kết nối giữa sinh viên</p>
+                    <div class="flex flex-wrap gap-x-6 gap-y-1 mt-4 text-xs md:text-sm text-slate-600">
+                        <span><i class="fa-solid fa-circle-check text-green-500 mr-1.5"></i>Sản phẩm đa dạng</span>
+                        <span><i class="fa-solid fa-circle-check text-green-500 mr-1.5"></i>Giá cả hợp lý</span>
+                        <span><i class="fa-solid fa-circle-check text-green-500 mr-1.5"></i>Cộng đồng sinh viên</span>
+                    </div>
+                    <button onclick="document.getElementById('product-section').scrollIntoView()" class="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm">Khám phá ngay <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+            </section>
+
+            <div class="grid lg:grid-cols-[1fr_340px] gap-5 items-start">
+                <div class="min-w-0 space-y-5">
+                    <div class="card p-4 md:p-5 flex gap-2 overflow-x-auto no-scrollbar">
+                    <button data-category-filter="all" onclick="filterCategory('all')" class="cat-tile is-active flex flex-col items-center gap-2 min-w-[84px] flex-1"><span class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-blue-100 text-blue-600"><i class="fa-solid fa-table-cells-large"></i></span><span class="cat-label text-xs md:text-sm text-slate-600">Tất cả</span></button>
+                    <button data-category-filter="Sach" onclick="filterCategory('Sach')" class="cat-tile flex flex-col items-center gap-2 min-w-[84px] flex-1"><span class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-blue-100 text-blue-600"><i class="fa-regular fa-book-open"></i></span><span class="cat-label text-xs md:text-sm text-slate-600">Sách & Tài liệu</span></button>
+                    <button data-category-filter="DoGiaDung" onclick="filterCategory('DoGiaDung')" class="cat-tile flex flex-col items-center gap-2 min-w-[84px] flex-1"><span class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-green-100 text-green-600"><i class="fa-solid fa-house"></i></span><span class="cat-label text-xs md:text-sm text-slate-600">Đồ gia dụng</span></button>
+                    <button data-category-filter="DienTu" onclick="filterCategory('DienTu')" class="cat-tile flex flex-col items-center gap-2 min-w-[84px] flex-1"><span class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-orange-100 text-orange-500"><i class="fa-solid fa-mobile-screen"></i></span><span class="cat-label text-xs md:text-sm text-slate-600">Điện tử</span></button>
+                    <button data-category-filter="HocTap" onclick="filterCategory('HocTap')" class="cat-tile flex flex-col items-center gap-2 min-w-[84px] flex-1"><span class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-pink-100 text-pink-500"><i class="fa-solid fa-pen"></i></span><span class="cat-label text-xs md:text-sm text-slate-600">Đồ dùng học tập</span></button>
+                    <button data-category-filter="ThoiTrang" onclick="filterCategory('ThoiTrang')" class="cat-tile flex flex-col items-center gap-2 min-w-[84px] flex-1"><span class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-purple-100 text-purple-500"><i class="fa-solid fa-shirt"></i></span><span class="cat-label text-xs md:text-sm text-slate-600">Thời trang</span></button>
+                    <button data-category-filter="Khac" onclick="filterCategory('Khac')" class="cat-tile flex flex-col items-center gap-2 min-w-[84px] flex-1"><span class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-slate-100 text-slate-500"><i class="fa-solid fa-ellipsis"></i></span><span class="cat-label text-xs md:text-sm text-slate-600">Khác</span></button>
+                    </div>
+                    <div id="product-section" class="card p-4 md:p-5 scroll-mt-24">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg md:text-xl font-bold text-blue-900"><i class="fa-solid fa-fire text-orange-500 mr-2"></i>Sản phẩm nổi bật</h2>
+                            <button onclick="filterCategory('all')" class="text-sm text-blue-600 font-medium">Xem tất cả <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4" id="product-grid"></div>
+                    </div>
+                </div>
+
+                <aside class="space-y-5">
+                    <div onclick="showPage('kyc-page')" class="cursor-pointer rounded-2xl bg-gradient-to-br from-blue-100 to-sky-50 border border-blue-100 p-5 flex gap-4 items-center">
+                        <span class="w-14 h-14 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl"><i class="fa-solid fa-shield-halved"></i></span>
+                        <div><h3 class="font-bold text-blue-900">Xác minh sinh viên</h3><p class="text-xs text-slate-600 mt-1">Tài khoản đã được xác minh là sinh viên Trường Đại học Sư phạm Huế</p><span class="inline-block mt-2 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i>Đã xác minh</span></div>
+                    </div>
+                    <div class="card p-5">
+                        <h3 class="font-bold text-blue-900 mb-2">Danh mục phổ biến</h3>
+                        <ul>
+                        <li onclick="filterCategory('Sach'); document.getElementById('product-section').scrollIntoView()" class="flex items-center gap-3 py-3 cursor-pointer hover:text-blue-600 border-b border-slate-100 last:border-0"><span class="w-9 h-9 rounded-xl flex items-center justify-center bg-blue-100 text-blue-600"><i class="fa-regular fa-book-open"></i></span><span class="flex-1 text-sm">Sách & Tài liệu</span><i class="fa-solid fa-chevron-right text-xs text-slate-400"></i></li>
+                        <li onclick="filterCategory('DoGiaDung'); document.getElementById('product-section').scrollIntoView()" class="flex items-center gap-3 py-3 cursor-pointer hover:text-blue-600 border-b border-slate-100 last:border-0"><span class="w-9 h-9 rounded-xl flex items-center justify-center bg-green-100 text-green-600"><i class="fa-solid fa-house"></i></span><span class="flex-1 text-sm">Đồ gia dụng</span><i class="fa-solid fa-chevron-right text-xs text-slate-400"></i></li>
+                        <li onclick="filterCategory('DienTu'); document.getElementById('product-section').scrollIntoView()" class="flex items-center gap-3 py-3 cursor-pointer hover:text-blue-600 border-b border-slate-100 last:border-0"><span class="w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-500"><i class="fa-solid fa-mobile-screen"></i></span><span class="flex-1 text-sm">Điện tử</span><i class="fa-solid fa-chevron-right text-xs text-slate-400"></i></li>
+                        <li onclick="filterCategory('HocTap'); document.getElementById('product-section').scrollIntoView()" class="flex items-center gap-3 py-3 cursor-pointer hover:text-blue-600 border-b border-slate-100 last:border-0"><span class="w-9 h-9 rounded-xl flex items-center justify-center bg-pink-100 text-pink-500"><i class="fa-solid fa-pen"></i></span><span class="flex-1 text-sm">Đồ dùng học tập</span><i class="fa-solid fa-chevron-right text-xs text-slate-400"></i></li>
+                        <li onclick="filterCategory('ThoiTrang'); document.getElementById('product-section').scrollIntoView()" class="flex items-center gap-3 py-3 cursor-pointer hover:text-blue-600 border-b border-slate-100 last:border-0"><span class="w-9 h-9 rounded-xl flex items-center justify-center bg-purple-100 text-purple-500"><i class="fa-solid fa-shirt"></i></span><span class="flex-1 text-sm">Thời trang</span><i class="fa-solid fa-chevron-right text-xs text-slate-400"></i></li>
+                        <li onclick="filterCategory('Khac'); document.getElementById('product-section').scrollIntoView()" class="flex items-center gap-3 py-3 cursor-pointer hover:text-blue-600 border-b border-slate-100 last:border-0"><span class="w-9 h-9 rounded-xl flex items-center justify-center bg-slate-100 text-slate-500"><i class="fa-solid fa-ellipsis"></i></span><span class="flex-1 text-sm">Khác</span><i class="fa-solid fa-chevron-right text-xs text-slate-400"></i></li>
+                        </ul>
+                    </div>
+                    <div class="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 text-white p-5 flex items-center justify-between gap-3 overflow-hidden">
+                        <div><h3 class="font-bold text-lg leading-snug">Đăng bán ngay<br>hoàn toàn miễn phí!</h3><button onclick="showPage('post-page')" class="mt-3 bg-white text-blue-700 text-sm font-semibold px-4 py-2 rounded-full">Bắt đầu đăng bán <i class="fa-solid fa-arrow-right ml-1"></i></button></div>
+                        <i class="fa-solid fa-bag-shopping text-6xl text-white/30"></i>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="detail-page" class="page-content hidden pb-32 max-w-5xl mx-auto bg-white md:rounded-2xl md:my-6 md:shadow-sm overflow-hidden">
+            <div class="relative">
+                <img id="detail-img" src="" class="w-full h-72 object-cover">
+                <button onclick="showPage('home-page')" class="absolute top-3 left-3 bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-1">
+                    <h2 id="detail-title" class="text-lg font-bold text-gray-800">--</h2>
+                    <span id="detail-price" class="text-lg font-bold text-blue-600">--</span>
+                </div>
+                <p id="detail-location" class="text-xs text-gray-500 mb-4"><i class="fa-solid fa-location-dot"></i> --</p>
+                
+                <div class="bg-gray-50 p-3 rounded-xl flex items-center justify-between border mb-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold text-xs" id="detail-seller-avatar">SV</div>
+                        <div>
+                            <p id="detail-seller-name" class="font-bold text-xs">Người bán</p>
+                            <p class="text-[10px] text-green-700"><i class="fa-solid fa-circle-check"></i> Tài khoản đã xác minh</p>
+                        </div>
+                    </div>
+                    <button onclick="openChat()" class="bg-green-100 text-green-700 font-bold px-3 py-1.5 rounded-lg text-xs border border-green-300">
+                        <i class="fa-solid fa-comments"></i> Chat ngay
+                    </button>
+                </div>
+
+                <div class="border-t pt-3 mb-4">
+                    <h3 class="font-bold text-xs text-gray-700 mb-1">Mô Tả Sản Phẩm</h3>
+                    <p id="detail-desc" class="text-xs text-gray-600 leading-relaxed">--</p>
+                </div>
+                <div class="border-t pt-2">
+                    <p class="text-xs text-gray-500">Chế độ bảo hành: <span id="detail-warranty" class="font-semibold text-gray-700">--</span></p>
+                </div>
+            </div>
+
+            <div id="detail-bottom-bar" class="fixed bottom-0 left-0 right-0 max-w-xl mx-auto bg-white border-t p-3 flex gap-2 z-50 shadow-2xl">
+                <button onclick="openChat()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-md">
+                    <i class="fa-solid fa-comments text-base"></i> Nhắn Tin
+                </button>
+                            </div>
+        </section>
+
+        <section id="chat-page" class="page-content hidden flex flex-col h-[calc(100vh-150px)] md:h-[78vh] max-w-4xl mx-auto bg-white md:my-6 md:rounded-2xl md:shadow-sm overflow-hidden">
+            <div class="p-3 bg-gray-100 border-b flex items-center justify-between">
+                <div>
+                    <span id="chat-with-user" class="font-bold text-xs block">Chat với Người Bán</span>
+                    <span class="text-[10px] text-green-600">● Đang hoạt động</span>
+                </div>
+                <div class="flex items-center gap-2">
+                                        <button onclick="showPage('home-page')" class="text-xs text-gray-500 px-2 py-1">Đóng</button>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border-b p-2 px-3 flex items-center justify-between text-xs">
+                <span class="text-blue-800 text-[11px] font-semibold"><i class="fa-solid fa-shield-halved"></i> Hai bên tự thỏa thuận giá, tình trạng và địa điểm giao hàng</span>
+                <button id="confirm-deal-btn" onclick="confirmDeal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-full text-[11px] shadow">
+                    ✓ Xác nhận đã giao dịch
+                </button>
+            </div>
+
+            <div id="chat-box" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs bg-gray-50">
+                <div class="bg-gray-200 p-2.5 rounded-lg max-w-[80%]">Chào bạn, món đồ này còn không ạ?</div>
+                <div class="bg-blue-100 text-blue-900 p-2.5 rounded-lg max-w-[80%] ml-auto">Dạ đồ vẫn còn nha bạn! Bạn có thể trao đổi thêm với mình qua tin nhắn nhé.</div>
+            </div>
+
+            <div class="p-2 border-t flex gap-2 bg-white">
+                <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." class="flex-1 border p-2 rounded-lg text-xs outline-none">
+                <button onclick="sendChatMessage()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold">Gửi</button>
+            </div>
+        </section>
+
+        <section id="my-products-page" class="page-content p-4 hidden max-w-3xl mx-auto md:my-6 md:rounded-2xl md:shadow-sm md:bg-white">
+            <h2 class="text-base font-bold mb-3 border-b pb-2 text-gray-800">Sản Phẩm Tôi Đang Bán</h2>
+            <div id="my-products-list" class="space-y-3"></div>
+        </section>
+
+        <section id="post-page" class="page-content p-5 hidden max-w-3xl mx-auto md:my-6 md:rounded-2xl md:shadow-sm md:bg-white">
+            <h2 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">Đăng Bán Đồ Cũ Sinh Viên</h2>
+            <form onsubmit="handlePostProduct(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="font-semibold block mb-1">Tiêu đề bài đăng</label>
+                    <input type="text" id="post-title" required placeholder="e.g. Pass lại quạt đứng Senko cũ" class="w-full p-2.5 border rounded-lg text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="font-semibold block mb-1">Giá bán (VNĐ)</label>
+                        <input type="number" id="post-price" required placeholder="120000" class="w-full p-2.5 border rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="font-semibold block mb-1">Danh mục</label>
+                        <select id="post-category" class="w-full p-2.5 border rounded-lg text-sm bg-white">
+                            <option value="DoGiaDung">Đồ gia dụng</option>
+                            <option value="DienTu">Điện tử</option>
+                            <option value="Sach">Sách / Tài liệu</option>
+                            <option value="HocTap">Đồ dùng học tập</option>
+                            <option value="ThoiTrang">Thời trang</option>
+                            <option value="Khac">Khác</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-semibold block mb-1">Số lượng</label>
+                    <input type="number" id="post-qty" min="1" value="1" required class="w-full p-2.5 border rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="font-semibold block mb-1">Vị trí giao hàng</label>
+                    <input type="text" id="post-location" required placeholder="VD: Cổng B, KTX, Thư viện - ĐH Sư phạm Huế" class="w-full p-2.5 border rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="font-semibold block mb-1">Mô tả chi tiết</label>
+                    <textarea id="post-desc" rows="3" required placeholder="Mô tả tình trạng đồ dùng..." class="w-full p-2.5 border rounded-lg text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="font-semibold block mb-1">Link Ảnh (URL)</label>
+                    <input type="url" id="post-img" required placeholder="https://..." class="w-full p-2.5 border rounded-lg text-sm">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg text-sm hover:bg-blue-700">Đăng Bài Ngay</button>
+            </form>
+        </section>
+
+        <section id="profile-page" class="page-content p-5 hidden max-w-3xl mx-auto md:my-6 md:rounded-2xl md:shadow-sm md:bg-white">
+            <h2 class="text-lg font-bold border-b pb-2 mb-4 text-gray-800">Tài khoản của tôi</h2>
+            <div class="bg-blue-50 p-4 rounded-xl mb-4 border border-blue-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xl"><i class="fa-solid fa-user-shield"></i></div>
+                    <div><p class="font-bold text-gray-800">Tài khoản sinh viên</p><p class="text-xs text-green-700 mt-1"><i class="fa-solid fa-circle-check"></i> Đã xác minh</p></div>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 leading-relaxed"><i class="fa-solid fa-lock text-blue-600 mr-1"></i> Để bảo vệ quyền riêng tư, họ tên, số điện thoại và giấy tờ xác minh không hiển thị công khai. Người mua chỉ nhìn thấy trạng thái <b>Đã xác minh</b>.</p>
+        </section>
+
+        <section id="kyc-page" class="page-content p-5 hidden max-w-3xl mx-auto md:my-6 md:rounded-2xl md:shadow-sm md:bg-white">
+            <h2 class="text-lg font-bold mb-1 text-gray-800">Xác minh tài khoản sinh viên</h2>
+            <p class="text-xs text-gray-500 mb-4">Hồ sơ được quản trị viên duyệt thủ công và đối chiếu với dữ liệu sinh viên của trường (sau này có thể bổ sung duyệt tự động). Ảnh giấy tờ là dữ liệu riêng tư; công khai chỉ hiển thị trạng thái “Đã xác minh”.</p>
+            
+            <div class="bg-black rounded-xl overflow-hidden relative mb-3 h-56 flex items-center justify-center">
+                <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
+                <canvas id="canvas" class="hidden"></canvas>
+                <div id="camera-placeholder" class="text-white text-center p-4">
+                    <i class="fa-solid fa-camera text-3xl mb-2 text-gray-400"></i>
+                    <p class="text-xs">Bấm nút bên dưới để mở Camera</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <button onclick="startCamera('environment')" class="bg-blue-600 text-white text-xs py-2 rounded-lg font-semibold flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-camera-rotate"></i> Mở Camera Sau
+                </button>
+                <button onclick="startCamera('user')" class="bg-indigo-600 text-white text-xs py-2 rounded-lg font-semibold flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-user-gear"></i> Mở Camera Trước
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <button onclick="capturePhoto('card')" class="bg-blue-600 text-white text-xs py-2.5 rounded-lg font-semibold">📸 Chụp Thẻ SV</button>
+                <button onclick="capturePhoto('face')" class="bg-purple-600 text-white text-xs py-2.5 rounded-lg font-semibold">📸 Chụp Chân Dung</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-center text-xs mb-4">
+                <div class="border p-2 rounded-lg bg-gray-50 min-h-[90px] flex flex-col justify-center items-center">
+                    <p class="font-semibold mb-1 text-gray-600 text-[11px]">Thẻ Sinh Viên</p>
+                    <img id="preview-card" class="w-full h-16 object-cover rounded hidden">
+                    <span id="text-card" class="text-gray-400 text-[10px]">Chưa chụp</span>
+                </div>
+                <div class="border p-2 rounded-lg bg-gray-50 min-h-[90px] flex flex-col justify-center items-center">
+                    <p class="font-semibold mb-1 text-gray-600 text-[11px]">Ảnh Chân Dung</p>
+                    <img id="preview-face" class="w-full h-16 object-cover rounded hidden">
+                    <span id="text-face" class="text-gray-400 text-[10px]">Chưa chụp</span>
+                </div>
+            </div>
+
+            <button onclick="submitKYC()" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg text-xs shadow">Gửi hồ sơ chờ duyệt</button>
+        </section>
+
+        <section id="docs-page" class="page-content hidden px-3 md:px-6 py-6">
+            <div class="max-w-4xl mx-auto card p-5 md:p-8 text-sm text-slate-700 leading-relaxed">
+                <button onclick="showPage('home-page')" class="text-blue-600 text-xs mb-3"><i class="fa-solid fa-arrow-left mr-1"></i>Về trang chủ</button>
+                <h2 class="text-xl font-bold text-blue-900 mb-1">Tài liệu thiết kế: Chợ sinh viên Sư phạm Huế</h2>
+                <p class="text-xs text-slate-500 mb-5">Bản mô phỏng phục vụ tiểu luận. Phạm vi nhỏ, chỉ dành cho sinh viên Trường Đại học Sư phạm Huế.</p>
+                <h3 class="font-bold text-blue-800 mt-4 mb-2">1. Quy trình nghiệp vụ</h3>
+                <ol class="list-decimal pl-5"><li class="mb-1">Sinh viên đăng ký tài khoản (mã sinh viên, email trường).</li><li class="mb-1">Gửi hồ sơ xác minh; quản trị viên duyệt tay, đối chiếu với dữ liệu sinh viên của trường. Duyệt tự động là hướng phát triển.</li><li class="mb-1">Đăng bán và quản lý sản phẩm: tên, hình ảnh, giá, số lượng, trạng thái.</li><li class="mb-1">Người mua tìm kiếm, lọc theo danh mục và nhắn tin với người bán.</li><li class="mb-1">Hai bên tự thỏa thuận giá, tình trạng và địa điểm giao hàng trong khuôn viên trường. Web không giữ tiền.</li><li class="mb-1">Khi cả hai bên cùng xác nhận, hệ thống ghi nhận giao dịch: số lượng giảm 1, người bán tăng một lượt bán thành công (uy tín).</li></ol>
+                <h3 class="font-bold text-blue-800 mt-6 mb-2">2. Sơ đồ ERD</h3>
+                <div id="erd-box" class="overflow-x-auto text-xs text-slate-500">Đang tải sơ đồ (cần Internet)...</div>
+                <h3 class="font-bold text-blue-800 mt-6 mb-2">3. Từ điển dữ liệu</h3>
+                <div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">users</span> <span class="font-normal text-slate-500">· Tài khoản sinh viên</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">user_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">student_code</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">Duy nhất, mã sinh viên</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">full_name</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600"></td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">email</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">Duy nhất, email trường</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">password_hash</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">Không lưu mật khẩu thô</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">role</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">student / admin</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">kyc_status</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">chua_gui / cho_duyet / da_xac_minh / tu_choi</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">created_at</td><td class="py-1 pr-3">DATETIME</td><td class="py-1 text-slate-600"></td></tr></tbody></table></div><div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">kyc_requests</span> <span class="font-normal text-slate-500">· Hồ sơ xác minh (duyệt tay)</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">request_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">user_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → users</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">card_image_path</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">Ảnh thẻ SV, riêng tư</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">face_image_path</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">Ảnh chân dung, riêng tư</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">status</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">cho_duyet / da_duyet / tu_choi</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">reviewed_by</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → users (admin)</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">reviewed_at</td><td class="py-1 pr-3">DATETIME</td><td class="py-1 text-slate-600"></td></tr></tbody></table></div><div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">categories</span> <span class="font-normal text-slate-500">· Danh mục</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">category_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">name</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600"></td></tr></tbody></table></div><div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">products</span> <span class="font-normal text-slate-500">· Sản phẩm đăng bán</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">product_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">seller_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → users</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">category_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → categories</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">title</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600"></td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">description</td><td class="py-1 pr-3">TEXT</td><td class="py-1 text-slate-600"></td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">price</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">VNĐ</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">quantity</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">Giảm 1 khi giao dịch hoàn tất</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">image_url</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600"></td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">pickup_location</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">Trong khuôn viên ĐH Sư phạm Huế</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">status</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">dang_ban / het_hang / da_an</td></tr></tbody></table></div><div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">favorites</span> <span class="font-normal text-slate-500">· Sản phẩm yêu thích</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">user_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK, FK → users</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">product_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK, FK → products</td></tr></tbody></table></div><div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">conversations</span> <span class="font-normal text-slate-500">· Cuộc trò chuyện</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">conversation_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">product_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → products</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">buyer_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → users</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">created_at</td><td class="py-1 pr-3">DATETIME</td><td class="py-1 text-slate-600">UNIQUE (product_id, buyer_id)</td></tr></tbody></table></div><div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">messages</span> <span class="font-normal text-slate-500">· Tin nhắn</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">message_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">conversation_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → conversations</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">sender_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK → users</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">content</td><td class="py-1 pr-3">TEXT</td><td class="py-1 text-slate-600"></td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">sent_at</td><td class="py-1 pr-3">DATETIME</td><td class="py-1 text-slate-600"></td></tr></tbody></table></div><div class="mb-4"><p class="font-bold text-sm text-blue-800"><span class="font-mono">transactions</span> <span class="font-normal text-slate-500">· Ghi nhận giao dịch</span></p><table class="w-full text-xs mt-1"><tbody><tr class="border-t"><td class="py-1 pr-3 font-mono">transaction_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">PK</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">conversation_id</td><td class="py-1 pr-3">INT</td><td class="py-1 text-slate-600">FK UNIQUE → conversations</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">buyer_confirmed</td><td class="py-1 pr-3">BOOLEAN</td><td class="py-1 text-slate-600"></td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">seller_confirmed</td><td class="py-1 pr-3">BOOLEAN</td><td class="py-1 text-slate-600"></td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">status</td><td class="py-1 pr-3">VARCHAR</td><td class="py-1 text-slate-600">cho_xac_nhan / hoan_tat</td></tr><tr class="border-t"><td class="py-1 pr-3 font-mono">completed_at</td><td class="py-1 pr-3">DATETIME</td><td class="py-1 text-slate-600">Có khi cả hai xác nhận</td></tr></tbody></table></div>
+                <h3 class="font-bold text-blue-800 mt-6 mb-2">4. Mã SQL (tạo bảng, dữ liệu mẫu, truy vấn uy tín)</h3>
+                <pre class="bg-slate-900 text-slate-100 text-xs rounded-xl p-4 overflow-x-auto">-- Viết cho SQLite (đổi AUTOINCREMENT thành AUTO_INCREMENT nếu dùng MySQL)
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE users (
+  user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_code TEXT NOT NULL UNIQUE,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT &#x27;student&#x27; CHECK (role IN (&#x27;student&#x27;,&#x27;admin&#x27;)),
+  kyc_status TEXT NOT NULL DEFAULT &#x27;chua_gui&#x27;
+    CHECK (kyc_status IN (&#x27;chua_gui&#x27;,&#x27;cho_duyet&#x27;,&#x27;da_xac_minh&#x27;,&#x27;tu_choi&#x27;)),
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE kyc_requests (
+  request_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(user_id),
+  card_image_path TEXT NOT NULL,
+  face_image_path TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT &#x27;cho_duyet&#x27; CHECK (status IN (&#x27;cho_duyet&#x27;,&#x27;da_duyet&#x27;,&#x27;tu_choi&#x27;)),
+  reviewed_by INTEGER REFERENCES users(user_id),
+  reviewed_at TEXT
+);
+
+CREATE TABLE categories (
+  category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE products (
+  product_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  seller_id INTEGER NOT NULL REFERENCES users(user_id),
+  category_id INTEGER NOT NULL REFERENCES categories(category_id),
+  title TEXT NOT NULL,
+  description TEXT,
+  price INTEGER NOT NULL CHECK (price &gt;= 0),
+  quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity &gt;= 0),
+  image_url TEXT,
+  pickup_location TEXT,
+  status TEXT NOT NULL DEFAULT &#x27;dang_ban&#x27; CHECK (status IN (&#x27;dang_ban&#x27;,&#x27;het_hang&#x27;,&#x27;da_an&#x27;)),
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE favorites (
+  user_id INTEGER NOT NULL REFERENCES users(user_id),
+  product_id INTEGER NOT NULL REFERENCES products(product_id),
+  PRIMARY KEY (user_id, product_id)
+);
+
+CREATE TABLE conversations (
+  conversation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product_id INTEGER NOT NULL REFERENCES products(product_id),
+  buyer_id INTEGER NOT NULL REFERENCES users(user_id),
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (product_id, buyer_id)
+);
+
+CREATE TABLE messages (
+  message_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  conversation_id INTEGER NOT NULL REFERENCES conversations(conversation_id),
+  sender_id INTEGER NOT NULL REFERENCES users(user_id),
+  content TEXT NOT NULL,
+  sent_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE transactions (
+  transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  conversation_id INTEGER NOT NULL UNIQUE REFERENCES conversations(conversation_id),
+  buyer_confirmed INTEGER NOT NULL DEFAULT 0,
+  seller_confirmed INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT &#x27;cho_xac_nhan&#x27; CHECK (status IN (&#x27;cho_xac_nhan&#x27;,&#x27;hoan_tat&#x27;)),
+  completed_at TEXT
+);
+
+-- Dữ liệu mẫu
+INSERT INTO categories(name) VALUES (&#x27;Sách &amp; Tài liệu&#x27;),(&#x27;Đồ gia dụng&#x27;),(&#x27;Điện tử&#x27;),(&#x27;Đồ dùng học tập&#x27;),(&#x27;Thời trang&#x27;),(&#x27;Khác&#x27;);
+INSERT INTO users(student_code,full_name,email,password_hash,role,kyc_status) VALUES
+ (&#x27;ADMIN01&#x27;,&#x27;Quản trị viên&#x27;,&#x27;admin@example.edu.vn&#x27;,&#x27;hash&#x27;,&#x27;admin&#x27;,&#x27;da_xac_minh&#x27;),
+ (&#x27;SV001&#x27;,&#x27;Nguyễn Văn A&#x27;,&#x27;sv001@example.edu.vn&#x27;,&#x27;hash&#x27;,&#x27;student&#x27;,&#x27;da_xac_minh&#x27;),
+ (&#x27;SV002&#x27;,&#x27;Trần Thị B&#x27;,&#x27;sv002@example.edu.vn&#x27;,&#x27;hash&#x27;,&#x27;student&#x27;,&#x27;da_xac_minh&#x27;);
+INSERT INTO products(seller_id,category_id,title,price,quantity,pickup_location) VALUES
+ (2,2,&#x27;Quạt Senko đứng mới 90%&#x27;,120000,1,&#x27;Cổng A - ĐH Sư phạm Huế&#x27;),
+ (2,1,&#x27;Bộ giáo trình Kế toán tài chính&#x27;,35000,2,&#x27;Thư viện - ĐH Sư phạm Huế&#x27;);
+
+-- Luồng giao dịch: B nhắn tin hỏi mua quạt, hai bên cùng xác nhận
+INSERT INTO conversations(product_id,buyer_id) VALUES (1,3);
+INSERT INTO transactions(conversation_id,buyer_confirmed) VALUES (1,1);
+UPDATE transactions SET seller_confirmed=1, status=&#x27;hoan_tat&#x27;, completed_at=CURRENT_TIMESTAMP WHERE conversation_id=1;
+UPDATE products SET quantity = quantity - 1 WHERE product_id=1;
+UPDATE products SET status=&#x27;het_hang&#x27; WHERE product_id=1 AND quantity=0;
+
+-- Uy tín người bán = số giao dịch hoàn tất
+SELECT p.seller_id, COUNT(*) AS so_lan_ban
+FROM transactions t
+JOIN conversations c ON c.conversation_id = t.conversation_id
+JOIN products p ON p.product_id = c.product_id
+WHERE t.status=&#x27;hoan_tat&#x27;
+GROUP BY p.seller_id;</pre>
+                <h3 class="font-bold text-blue-800 mt-6 mb-2">5. Hạn chế và hướng phát triển</h3>
+                <ul class="list-disc pl-5"><li class="mb-1">Phạm vi chỉ trong Trường Đại học Sư phạm Huế, không mở rộng toàn quốc để dễ kiểm soát.</li><li class="mb-1">Chưa có thanh toán trực tuyến; hai bên tự giao dịch. Có thể phát triển sau.</li><li class="mb-1">KYC hiện duyệt tay; có thể bổ sung duyệt tự động bằng cách đối chiếu với CSDL sinh viên.</li><li class="mb-1">Uy tín dựa trên số giao dịch hoàn tất nên có thể bị tăng ảo nếu hai người quen cùng xác nhận; cần cơ chế chống gian lận.</li><li class="mb-1">Bản web hiện là mô phỏng giao diện, dữ liệu chưa lưu vào CSDL thật.</li></ul>
+            </div>
+        </section>
+
+        <section id="auth-page" class="page-content p-6 hidden max-w-3xl mx-auto md:my-6 md:rounded-2xl md:shadow-sm md:bg-white">
+            <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Đăng Nhập</h2>
+            <form onsubmit="alert('Đăng nhập thành công!'); showPage('home-page'); return false;" class="space-y-4">
+                <input type="text" placeholder="Mã sinh viên / Email trường" required class="w-full p-2.5 border rounded-lg text-sm">
+                <input type="password" placeholder="Mật khẩu" required class="w-full p-2.5 border rounded-lg text-sm">
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg">Đăng Nhập</button>
+            </form>
+        </section>
+
+        <p class="text-center text-xs text-slate-500 pb-6 px-4"><i class="fa-solid fa-location-dot mr-1 text-blue-500"></i>Chợ dành riêng cho sinh viên Trường Đại học Sư phạm Huế · Hai bên tự thỏa thuận và giao dịch trực tiếp · Bản mô phỏng phục vụ tiểu luận</p>
+    </main>
+
+    <nav id="main-footer" class="campus-bottom-nav md:hidden fixed bottom-0 bg-white border-t flex justify-around py-2.5 md:py-3 z-30 text-gray-500 text-xs shadow-lg">
+        <button onclick="showPage('home-page')" class="flex flex-col items-center hover:text-blue-600">
+            <i class="fa-solid fa-house text-lg mb-0.5"></i> Trang chủ
+        </button>
+        <button onclick="showPage('chat-page')" class="flex flex-col items-center hover:text-blue-600">
+            <i class="fa-solid fa-comments text-lg mb-0.5 text-blue-600"></i> Tin nhắn
+        </button>
+        <button onclick="showPage('profile-page')" class="flex flex-col items-center hover:text-blue-600">
+            <i class="fa-solid fa-user text-lg mb-0.5"></i> Tôi
+        </button>
+    </nav>
+
+    <script>
+        let products = [
+            {
+                id: 1, qty: 2, sellerSold: 12,
+                title: "Bộ giáo trình Kế toán tài chính K46",
+                price: 35000,
+                category: "Sach",
+                location: "Thư viện - ĐH Sư phạm Huế",
+                warranty: "Không bảo hành",
+                desc: "Trọn bộ 4 cuốn đầy đủ bài giải, sách còn mới nguyên không rách.",
+                img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+                seller: "Người bán đã xác minh",
+                isMyProduct: false
+            },
+            {
+                id: 2, qty: 1, sellerSold: 5,
+                title: "Tủ lạnh Mini Aqua 90L cũ",
+                price: 650000,
+                category: "DoGiaDung",
+                location: "KTX ĐH Sư Phạm Huế",
+                warranty: "Bao test 3 ngày",
+                desc: "Tủ lạnh đang dùng tốt, làm lạnh nhanh, tiết kiệm điện. Do chuyển trọ nên muốn pass lại gấp.",
+                img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=500&q=80",
+                seller: "Người bán đã xác minh",
+                isMyProduct: false
+            },
+            {
+                id: 3, qty: 1, sellerSold: 8,
+                title: "Quạt Senko đứng mới 90%",
+                price: 120000,
+                category: "DoGiaDung",
+                location: "Cổng A - ĐH Sư phạm Huế",
+                warranty: "Bao test 3 ngày",
+                desc: "Quạt chạy êm, gió mạnh, chưa sửa chữa bao giờ.",
+                img: "https://images.unsplash.com/photo-1618941723604-968ba370e482?w=500&q=80",
+                seller: "Người bán đã xác minh",
+                isMyProduct: true
+            }
+            ,{ id: 4, qty: 1, sellerSold: 3, title: "Balo thời trang", price: 150000, category: "ThoiTrang", location: "Sư phạm Huế", warranty: "Không bảo hành", desc: "Balo màu hồng, còn mới 90%, đủ ngăn đựng laptop.", img: "https://placehold.co/500x400/fce7f3/ec4899?text=Balo", seller: "Người bán đã xác minh", isMyProduct: false },
+            { id: 5, qty: 1, sellerSold: 7, title: "iPhone 11 (128GB)", price: 5500000, category: "DienTu", location: "Sư phạm Huế", warranty: "Bao test 3 ngày", desc: "Máy nguyên zin, pin tốt, đầy đủ phụ kiện.", img: "https://placehold.co/500x400/ffedd5/f97316?text=iPhone+11", seller: "Người bán đã xác minh", isMyProduct: false },
+            { id: 6, qty: 3, sellerSold: 2, title: "Đèn học chống cận", price: 120000, category: "HocTap", location: "Sư phạm Huế", warranty: "Bao test 3 ngày", desc: "Đèn LED 3 chế độ sáng, ít dùng.", img: "https://placehold.co/500x400/dbeafe/1877e8?text=Den+hoc", seller: "Người bán đã xác minh", isMyProduct: false },
+            { id: 7, qty: 1, sellerSold: 4, title: "Nồi cơm điện mini", price: 350000, category: "DoGiaDung", location: "Sư phạm Huế", warranty: "Bao test 3 ngày", desc: "Nồi 1.2L phù hợp phòng trọ, dùng 1 năm.", img: "https://placehold.co/500x400/dcfce7/22c55e?text=Noi+com", seller: "Người bán đã xác minh", isMyProduct: false }
+        ];
+
+        let selectedProduct = products[0];
+        let transactions = []; // mô phỏng bảng transactions: {productId, buyerOk, sellerOk, status}
+        let cameraStream = null;
+
+        let erdDone = false;
+        async function renderErd() {
+            if (erdDone) return;
+            try {
+                const m = (await import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')).default;
+                m.initialize({ startOnLoad: false, theme: 'neutral' });
+                const { svg } = await m.render('erd-svg', `erDiagram
+  USERS ||--o{ KYC_REQUESTS : gui
+  USERS ||--o{ PRODUCTS : dang_ban
+  CATEGORIES ||--o{ PRODUCTS : phan_loai
+  USERS ||--o{ FAVORITES : luu
+  PRODUCTS ||--o{ FAVORITES : duoc_luu
+  PRODUCTS ||--o{ CONVERSATIONS : co
+  USERS ||--o{ CONVERSATIONS : mua
+  CONVERSATIONS ||--o{ MESSAGES : chua
+  USERS ||--o{ MESSAGES : gui_tin
+  CONVERSATIONS ||--o| TRANSACTIONS : chot`);
+                document.getElementById('erd-box').innerHTML = svg;
+                erdDone = true;
+            } catch (e) {
+                document.getElementById('erd-box').textContent = 'Không tải được sơ đồ. Kiểm tra kết nối Internet rồi mở lại trang này.';
+            }
         }
-    }
-</script>
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+
+            const mainFooter = document.getElementById('main-footer');
+            if (pageId === 'detail-page') {
+                mainFooter.classList.add('hidden');
+            } else {
+                mainFooter.classList.remove('hidden');
+            }
+
+            const nh = document.getElementById('nav-home'); if (nh) nh.classList.toggle('is-on', pageId === 'home-page');
+            if (pageId === 'my-products-page') renderMyProducts();
+            if (pageId === 'docs-page') renderErd();
+        }
+
+        function toggleMenu() {
+            document.getElementById('dropdown-menu').classList.toggle('hidden');
+        }
+
+        async function startCamera(facingMode) {
+            if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); }
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode } });
+                const video = document.getElementById('webcam');
+                video.srcObject = cameraStream;
+                document.getElementById('camera-placeholder').classList.add('hidden');
+            } catch (err) { alert('Không thể mở Camera thiết bị!'); }
+        }
+
+        function capturePhoto(type) {
+            if (!cameraStream) { alert('Vui lòng bật Camera trước!'); return; }
+            const video = document.getElementById('webcam');
+            const canvas = document.getElementById('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            const dataUrl = canvas.toDataURL('image/png');
+
+            if (type === 'card') {
+                document.getElementById('preview-card').src = dataUrl;
+                document.getElementById('preview-card').classList.remove('hidden');
+                document.getElementById('text-card').classList.add('hidden');
+            } else {
+                document.getElementById('preview-face').src = dataUrl;
+                document.getElementById('preview-face').classList.remove('hidden');
+                document.getElementById('text-face').classList.add('hidden');
+            }
+        }
+
+        function submitKYC() {
+            alert('Đã gửi hồ sơ. Trạng thái: Chờ quản trị viên duyệt.');
+            showPage('profile-page');
+        }
+
+        let activeCategory = 'all';
+        function getFilteredProducts() {
+            const query = document.getElementById('search-input').value.trim().toLocaleLowerCase('vi');
+            return products.filter(p => {
+                const matchesQuery = p.title.toLocaleLowerCase('vi').includes(query) ||
+                    p.location.toLocaleLowerCase('vi').includes(query) ||
+                    p.seller.toLocaleLowerCase('vi').includes(query);
+                return p.qty > 0 && matchesQuery && (activeCategory === 'all' || p.category === activeCategory) && (!showFavOnly || favs.has(p.id));
+            });
+        }
+
+        let favs = new Set();
+        let showFavOnly = false;
+
+        function toggleFav(e, id) {
+            e.stopPropagation();
+            favs.has(id) ? favs.delete(id) : favs.add(id);
+            e.currentTarget.classList.toggle('fav-on');
+            e.currentTarget.firstElementChild.className = favs.has(id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+        }
+
+        function toggleFavFilter() {
+            showFavOnly = !showFavOnly;
+            document.getElementById('nav-fav').classList.toggle('is-on', showFavOnly);
+            showPage('home-page');
+            renderProducts(getFilteredProducts());
+        }
+
+        function renderProducts(list) {
+            const grid = document.getElementById('product-grid');
+            if (!list.length) {
+                grid.innerHTML = '<div class="col-span-full text-center border border-dashed border-slate-300 rounded-2xl p-10"><i class="fa-solid fa-magnifying-glass text-3xl text-slate-300 mb-3"></i><p class="font-bold text-slate-700">Chưa tìm thấy sản phẩm phù hợp</p><p class="text-sm text-slate-500 mt-1">Thử từ khóa khác hoặc chọn danh mục Tất cả nhé.</p></div>';
+                return;
+            }
+            grid.innerHTML = list.map(p => `
+                <article onclick="openDetail(${p.id})" class="campus-product-card overflow-hidden cursor-pointer flex flex-col">
+                    <div class="relative bg-slate-100">
+                        <img src="${p.img}" alt="${p.title}" loading="lazy" class="w-full h-32 md:h-36 object-cover">
+                        <span class="absolute top-2 left-2 bg-white/95 text-green-700 text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-sm"><i class="fa-solid fa-circle-check text-green-500 mr-1"></i>Đã xác minh</span>
+                    </div>
+                    <div class="p-3 flex flex-col flex-1">
+                        <h3 class="text-sm text-slate-800 leading-5 line-clamp-2 min-h-[40px]">${p.title}</h3>
+                        <p class="text-blue-600 font-bold text-base mt-1.5">${p.price.toLocaleString('vi-VN')}đ</p>
+                        <p class="text-[11px] text-slate-500 mb-1.5">Còn ${p.qty} · <i class="fa-solid fa-medal text-amber-500"></i> Đã bán ${p.sellerSold} lần</p>
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 mt-auto">
+                            <span class="flex items-center gap-1 min-w-0"><i class="fa-solid fa-location-dot text-slate-400"></i><span class="truncate">${p.location}</span></span>
+                            <button onclick="toggleFav(event, ${p.id})" class="${favs.has(p.id) ? 'fav-on' : ''} text-slate-400 hover:text-red-500 p-1"><i class="${favs.has(p.id) ? 'fa-solid' : 'fa-regular'} fa-heart"></i></button>
+                        </div>
+                    </div>
+                </article>`).join('');
+        }
+
+        function filterProducts() {
+            renderProducts(getFilteredProducts());
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('[data-category-filter]').forEach(button => {
+                button.classList.toggle('is-active', button.dataset.categoryFilter === cat);
+            });
+            renderProducts(getFilteredProducts());
+        }
+
+        function openDetail(id) {
+            selectedProduct = products.find(p => p.id === id);
+            document.getElementById('detail-img').src = selectedProduct.img;
+            document.getElementById('detail-title').innerText = selectedProduct.title;
+            document.getElementById('detail-price').innerText = selectedProduct.price.toLocaleString() + 'đ';
+            document.getElementById('detail-location').innerText = selectedProduct.location;
+            document.getElementById('detail-desc').innerText = selectedProduct.desc;
+            document.getElementById('detail-warranty').innerText = selectedProduct.warranty;
+            document.getElementById('detail-seller-name').innerText = 'Người bán · Đã bán thành công ' + selectedProduct.sellerSold + ' lần';
+            document.getElementById('detail-warranty').innerText = selectedProduct.warranty + ' · Còn lại: ' + selectedProduct.qty;
+            showPage('detail-page');
+        }
+
+        function openChat() {
+            document.getElementById('chat-with-user').innerText = 'Nhắn tin với người bán';
+            resetDeal();
+            showPage('chat-page');
+        }
+
+        function openChatDirect(id) {
+            selectedProduct = products.find(p => p.id === id);
+            openChat();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            if (input.value.trim() !== '') {
+                const box = document.getElementById('chat-box');
+                const message = document.createElement('div');
+                message.className = 'bg-blue-100 text-blue-900 p-2.5 rounded-lg max-w-[80%] ml-auto break-words';
+                message.textContent = input.value.trim();
+                box.appendChild(message);
+                input.value = '';
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+
+        // Xác nhận 2 chiều: cả người mua và người bán xác nhận -> hệ thống ghi nhận, số lượng -1, người bán +1 lượt bán thành công
+        let dealState = 0; // 0: chưa ai xác nhận, 1: một bên đã xác nhận, 2: hoàn tất
+        function resetDeal() {
+            dealState = 0;
+            const btn = document.getElementById('confirm-deal-btn');
+            if (btn) { btn.textContent = '✓ Xác nhận đã giao dịch'; btn.disabled = false; btn.classList.remove('opacity-60'); }
+        }
+        function confirmDeal() {
+            const box = document.getElementById('chat-box');
+            const btn = document.getElementById('confirm-deal-btn');
+            const note = (cls, text) => { box.innerHTML += `<div class="${cls} p-2.5 rounded-lg max-w-[85%] mx-auto text-center font-semibold text-[11px]">${text}</div>`; box.scrollTop = box.scrollHeight; };
+            if (dealState === 0) {
+                dealState = 1;
+                transactions.push({ productId: selectedProduct.id, buyerOk: true, sellerOk: false, status: 'Chờ xác nhận' });
+                note('bg-yellow-50 border border-yellow-200 text-yellow-800', 'Bạn đã xác nhận giao dịch. Đang chờ bên còn lại xác nhận.');
+                btn.textContent = 'Giả lập: đối phương xác nhận';
+            } else if (dealState === 1) {
+                dealState = 2;
+                const t = transactions[transactions.length - 1];
+                t.sellerOk = true; t.status = 'Hoàn tất';
+                selectedProduct.qty = Math.max(0, selectedProduct.qty - 1);
+                selectedProduct.sellerSold += 1;
+                note('bg-green-100 border border-green-300 text-green-900', `✓ Cả hai bên đã xác nhận. Giao dịch hoàn tất, sản phẩm còn ${selectedProduct.qty}. Người bán có ${selectedProduct.sellerSold} lượt bán thành công.`);
+                btn.textContent = 'Đã hoàn tất';
+                btn.disabled = true;
+                btn.classList.add('opacity-60');
+                renderProducts(getFilteredProducts());
+            }
+        }
+
+        function renderMyProducts() {
+            const container = document.getElementById('my-products-list');
+            container.innerHTML = '';
+            const myProds = products.filter(p => p.isMyProduct);
+            if (myProds.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-500 text-center py-4">Bạn chưa đăng bán sản phẩm nào.</p>';
+                return;
+            }
+            myProds.forEach(p => {
+                container.innerHTML += `
+                    <div class="flex items-center gap-3 p-2 border rounded-lg bg-gray-50">
+                        <img src="${p.img}" class="w-14 h-14 object-cover rounded">
+                        <div class="flex-1">
+                            <p class="font-bold text-xs text-gray-800 line-clamp-1">${p.title}</p>
+                            <p class="text-blue-600 font-bold text-xs">${p.price.toLocaleString()}đ</p>
+                            ${p.qty > 0 ? `<span class="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-semibold">Đang hiển thị · còn ${p.qty}</span>` : `<span class="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-semibold">Đã bán hết</span>`}
+                        </div>
+                        <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 text-xs p-2">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteProduct(id) {
+            if(confirm('Bạn có chắc muốn xoá bài đăng này?')) {
+                products = products.filter(p => p.id !== id);
+                renderMyProducts();
+                renderProducts(getFilteredProducts());
+            }
+        }
+
+        function handlePostProduct(e) {
+            e.preventDefault();
+            const newProd = {
+                id: Date.now(),
+                title: document.getElementById('post-title').value,
+                price: parseInt(document.getElementById('post-price').value),
+                category: document.getElementById('post-category').value,
+                location: document.getElementById('post-location').value,
+                warranty: "Bao test 1 ngày , đối với những sản phẩm điện tử .",
+                desc: document.getElementById('post-desc').value,
+                img: document.getElementById('post-img').value,
+                seller: "Người bán đã xác minh",
+                qty: Math.max(1, parseInt(document.getElementById('post-qty').value) || 1),
+                sellerSold: 0,
+                isMyProduct: true
+            };
+            products.unshift(newProd);
+            document.getElementById('search-input').value = '';
+            filterCategory('all');
+            alert('Đăng bài bán thành công!');
+            showPage('home-page');
+        }
+
+        renderProducts(getFilteredProducts());
+        showPage('home-page');
+    </script>
 </body>
 </html>
